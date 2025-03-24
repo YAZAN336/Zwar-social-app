@@ -1,0 +1,71 @@
+zwar_app/
+├── android/          (إعدادات أندرويد)
+├── ios/              (إعدادات iOS)
+├── lib/              (أكواد Flutter الرئيسية)
+│   ├── main.dart     (ملف التشغيل الرئيسي)
+│   ├── screens/      (شاشات التطبيق)
+│   ├── widgets/      (مكونات واجهة المستخدم)
+│   ├── models/       (نماذج البيانات)
+│   └── services/     (خدمات Firebase)
+├── pubspec.yaml      (إعدادات التطبيق والمكتبات)
+└── README.md         (دليل الاستخدام)
+  import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'screens/auth_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'زوّار',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: AuthScreen(),
+    );
+  }
+}
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class AuthScreen extends StatefulWidget {
+  @override
+  _AuthScreenState createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> {
+  final _auth = FirebaseAuth.instance;
+  bool _isLogin = true;
+  }
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^2.15.1
+  firebase_auth: ^4.11.1
+  cloud_firestore: ^4.8.0
+  image_picker: ^1.0.4
+  import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class FirebaseService {
+  static final _auth = FirebaseAuth.instance;
+  static final _firestore = FirebaseFirestore.instance;
+
+  static Future<User?> signUp(String email, String password) async {
+    try {
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return userCredential.user;
+    } catch (e) {
+      print("Error signing up: $e");
+      return null;
+    }
+  }
+}
+
